@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState,useEffect } from "react";
+import Cities from "./components/Cities";
+import Footer from "./components/Footer";
+import News from "./components/News";
+import Weather from "./components/weather"
 
 function App() {
+  const [weather, setWeather]= useState([]);
+    const [isLoading, setIsLoading]= useState(true);
+
+    useEffect(()=>{
+      const fetchHandler= async ()=>{
+        const data= await fetch('https://api.openweathermap.org/data/2.5/weather?q=mumbai&appid=07869fa2579e2ab3ea7d13cfbbdf6537')
+        const responseData= await data.json();
+        setWeather(responseData);
+        setIsLoading(false);
+        // console.log(responseData);
+      }
+      fetchHandler();    
+    },[])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Weather weather={weather} isLoading={isLoading}/>
+      <Cities/>
+      <News/>
+      <Footer/>
     </div>
   );
 }
